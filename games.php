@@ -78,16 +78,6 @@
             <h4>Memory Match Adventure</h4>
             <p>Flip cards to find matching pairs and improve your memory!</p>
         </a>
-        <a href="games/color_shape_explorer.php" class="feature-card">
-            <img src="style/images/color_shape_icon.png" alt="Color and Shape Explorer" class="feature-icon">
-            <h4>Color and Shape Explorer</h4>
-            <p>Identify colors and shapes while having fun!</p>
-        </a>
-        <a href="games/word_builder.php" class="feature-card">
-            <img src="style/images/word_builder_icon.png" alt="Word Builder Adventure" class="feature-icon">
-            <h4>Word Builder Adventure</h4>
-            <p>Build words by selecting letters and explore a world of vocabulary!</p>
-        </a>
     </div>
 </div>
 
