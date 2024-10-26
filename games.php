@@ -1,4 +1,4 @@
-<?php include 'navbar.php'; ?>
+<?php include 'style/navbar.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
