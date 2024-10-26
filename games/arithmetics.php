@@ -42,7 +42,6 @@ $conn->close();
     <title>Arithmetic Operations</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
     <style>
         body {
             background-color: #a8e6cf; /* Light green background for the barn theme */
@@ -94,22 +93,26 @@ $conn->close();
         .btn-warning { background-color: #ffe082; } /* Light yellow for warning buttons */
         .btn-danger { background-color: #ff8a80; } /* Light red for danger buttons */
 
-        /* Confetti Background */
-        .confetti {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none; /* Ensure clicks go through to the modal */
-            overflow: hidden; /* Prevent overflow */
-            z-index: 0; /* Behind the modal */
-        }
+        .modal-dialog {
+    max-width: 600px; /* Set max width for the modal */
+}
+
+.modal-content {
+    text-align: center; /* Center the text within the modal */
+}
+
+h1.text-center {
+    font-family: 'Comic Sans MS', cursive, sans-serif; /* Change to a playful font */
+    font-size: 30px; /* Increase the font size */
+    color: #388e3c; /* Optional: Change color to match the theme */
+    margin-top: 40px; /* Add some space above the title */
+    margin-bottom: 20px; /* Add some space below the title */
+}
+
     </style>
 </head>
 <body>
 <?php include '../style/navbar.php'; ?>
-    <div class="confetti" id="confettiContainer"></div>
 
     <div class="container mx-auto my-5">
         <h1 class="text-center text-4xl font-bold text-red-600">Learn Arithmetic Operations!</h1>
@@ -134,23 +137,45 @@ $conn->close();
         </div>
     </div>
 
-    <!-- Modal for Answer Feedback -->
-    <div class="modal fade" id="answerModal" tabindex="-1" aria-labelledby="answerModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered"> <!-- Center the modal -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="answerModalLabel">Correct!</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="modalMessage">
-                    <!-- Feedback message will be displayed here -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="nextQuestionBtn">Next Question</button>
-                </div>
+<!-- Answer Modal -->
+<div class="modal fade" id="answerModal" tabindex="-1" role="dialog" aria-labelledby="answerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document"> <!-- Added 'modal-dialog-centered' -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="answerModalLabel">Answer Feedback</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="nextQuestionBtn">Next Question</button>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Completion Modal -->
+<div class="modal fade" id="completionModal" tabindex="-1" role="dialog" aria-labelledby="completionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document"> <!-- Added 'modal-dialog-centered' -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="completionModalLabel">Quiz Completed!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Your final score is: <span id="finalScore"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="redirectToGames()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -158,42 +183,6 @@ $conn->close();
     <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.4.0/confetti.browser.min.js"></script>
 
     <script>
-   // Function to create a realistic confetti explosion
-function explodeConfetti() {
-    const duration = 3 * 1000; // 3 seconds
-    const animationEnd = Date.now() + duration;
-    const defaults = {
-        startVelocity: 30,
-        spread: 360,
-        ticks: 60,
-        gravity: 0.5,
-        colors: ['#FF5733', '#33FF57', '#3357FF', '#F1C40F', '#9B59B6', '#FFC300', '#FF5733'],
-    };
-
-    function randomInRange(min, max) {
-        return Math.random() * (max - min) + min;
-    }
-
-    (function frame() {
-        const timeLeft = animationEnd - Date.now();
-        if (timeLeft <= 0) return; // Stop animation
-
-        const particleCount = 200 * (timeLeft / duration); // Increase particle count for realism
-        confetti(Object.assign({}, defaults, {
-            particleCount: Math.floor(particleCount),
-            origin: {
-                x: Math.random(),
-                y: Math.random() - 0.2 // Start from the top
-            },
-            startVelocity: randomInRange(25, 60), // Vary the starting velocity
-            spread: randomInRange(90, 120), // Vary the spread angle
-            gravity: randomInRange(0.3, 0.6), // Vary the gravity effect
-            ticks: randomInRange(50, 70) // Vary the lifetime of particles
-        }));
-
-        requestAnimationFrame(frame); // Recursive call to create more particles
-    })();
-}
 
         const questions = <?php echo json_encode($questions); ?>;
         let currentQuestionIndex = 0;
@@ -282,34 +271,41 @@ function explodeConfetti() {
         }
 
         function checkAnswer(selectedAnswer) {
-            const correctAnswer = parseInt(questions[currentQuestionIndex].answer);
-            const modalMessage = document.getElementById('modalMessage');
-            const nextQuestionBtn = document.getElementById('nextQuestionBtn');
+    const correctAnswer = parseInt(questions[currentQuestionIndex].answer);
+    const modalMessage = document.getElementById('modalMessage');
+    const nextQuestionBtn = document.getElementById('nextQuestionBtn');
 
-            if (selectedAnswer === correctAnswer) {
-                modalMessage.innerText = "Good Job! That's the correct answer!";
-                score++;
+    if (selectedAnswer === correctAnswer) {
+        modalMessage.innerText = "Good Job! That's the correct answer!";
+        score++;
+    } else {
+        modalMessage.innerText = "Incorrect! The correct answer is " + correctAnswer;
+    }
 
-                // Trigger confetti explosion
-                explodeConfetti();
-            } else {
-                modalMessage.innerText = "Incorrect! The correct answer is " + correctAnswer;
-            }
+    // Show the answer modal
+    $('#answerModal').modal('show');
 
-            // Show the modal
-            $('#answerModal').modal('show');
-
-            // Handle the next question button
-            nextQuestionBtn.onclick = function() {
-                currentQuestionIndex++;
-                if (currentQuestionIndex < questions.length) {
-                    $('#answerModal').modal('hide'); // Close the modal
-                    displayQuestion(); // Display the next question
-                } else {
-                    alert("You've completed the quiz! Your score: " + score);
-                }
-            };
+    // Handle the next question button
+    nextQuestionBtn.onclick = function() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            $('#answerModal').modal('hide'); // Close the modal
+            displayQuestion(); // Display the next question
+        } else {
+            // Show the completion modal after a 3-second delay
+            setTimeout(() => {
+                $('#answerModal').modal('hide'); // Close the answer modal
+                document.getElementById('finalScore').innerText = score; // Set final score
+                $('#completionModal').modal('show'); // Show completion modal
+            }, 1000); // 3000 milliseconds = 3 seconds
         }
+    };
+}
+
+
+    function redirectToGames() {
+        window.location.href = '/elem_learning_page/games.php'; // Redirect to the games page
+    }
     </script>
 </body>
 </html>
