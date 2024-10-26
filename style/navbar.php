@@ -8,7 +8,7 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item"><a class="nav-link text-dark" href="#">Home</a></li>
                 <li class="nav-item"><a class="nav-link text-dark" href="#">Learn</a></li>
-                <li class="nav-item"><a class="nav-link text-dark" href="#">Games</a></li>
+                <li class="nav-item"><a class="nav-link text-dark" href="/elem_learning_page/games.php">Games</a></li>
                 <li class="nav-item"><a class="nav-link text-dark" href="#">About Us</a></li>
             </ul>
         </div>

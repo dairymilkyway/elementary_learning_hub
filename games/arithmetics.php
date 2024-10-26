@@ -108,7 +108,7 @@ $conn->close();
     </style>
 </head>
 <body>
- <?php include 'style/navbar.php'; ?>
+<?php include '../style/navbar.php'; ?>
     <div class="confetti" id="confettiContainer"></div>
 
     <div class="container mx-auto my-5">
