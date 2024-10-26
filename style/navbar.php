@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #ffccbc;">
+<nav class="navbar navbar-expand-lg navbar-light sticky-top" style="background-color: #ffccbc;">
     <div class="container">
         <a class="navbar-brand text-primary" href="#">Math Barn</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
